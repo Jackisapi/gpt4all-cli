@@ -45,6 +45,7 @@ def all_models(datafile='models2.json'):
                     'URL:',dict_model['description'],'\n')
         model_data.close()
 
+
 """
 *************************************************************
 In development (aka no workie) at the moment butin theory
@@ -54,6 +55,8 @@ Parameters: Name, datafile(doesnt need filled)
 Returns: Currently just the name of the model if found
 *************************************************************
 """
+
+
 def model_check(name,datafile='models2.json'):
     with open(datafile,'r') as model_data:
         model_dict = json.load(model_data)
@@ -62,6 +65,14 @@ def model_check(name,datafile='models2.json'):
                 return dict_model['filename']
             else:
                 continue
+
+
+def exit_prompt():
+    ex_prompt = input('Are you sure you want to exit? ')
+    if ex_prompt.upper() == 'Y':
+        exit("Have A Nice Day (Program By Jackisapi")
+    else:
+        pass
 
 
 """
@@ -94,6 +105,8 @@ if __name__ == "__main__":
         elif prompt == 'ch':
             model = change_model()
             print(model)
+        elif prompt == 'exit':
+            exit_prompt()
         else:
             print(ask_ai(prompt, model,debug=True))
 
