@@ -10,11 +10,19 @@ Parameters: Search Queue, Model used
 Returns: A Response from your Model of choice
 *********************************************************
 """
-def ask_ai(quere, model):
+def ask_ai(quere, model,debug=False):
     model = GPT4All(model)
     with model.chat_session():
-        response = model.generate(prompt=quere)
-        return response
+        if debug == True:
+            tokens = []
+            response = model.generate(prompt=quere)
+            for token in response:
+                tokens.append(token)
+                print(tokens)
+                return response
+            else:
+                response = model.generate(prompt=quere)
+                return response
 
 """
 *************************************************************
@@ -87,6 +95,6 @@ if __name__ == "__main__":
             model = change_model()
             print(model)
         else:
-            print(ask_ai(prompt, model))
+            print(ask_ai(prompt, model,debug=True))
 
 
