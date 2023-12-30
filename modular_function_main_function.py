@@ -47,7 +47,7 @@ def all_models(datafile='models2.json'):
 
 """
 *************************************************************
-In development (aka no workie) at the moment butin theory
+In development but works mostly at the moment in theory
 takes a String Checks to see if that string is a available 
 model for gpt4all if not found it will throw an error
 Parameters: Name, datafile(doesnt need filled)
@@ -73,7 +73,16 @@ def exit_prompt():
     else:
         pass
 
-
+"""
+*************************************************************
+Takes what you are currently using for compute hardware then
+prints out all the other current hardware options then takes
+input if it matches a hardware option switches to that option
+if it doesnt it remains the same 
+Parameters: Your current hardware choice
+Returns: Your New Hardware choise (if applicable)
+*************************************************************
+"""
 def hw_change(device):
     print('These are the currently supported hardware options \n'
           'cuda (Nvidea based GPUs) \n'
