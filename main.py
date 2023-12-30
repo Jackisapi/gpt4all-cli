@@ -10,15 +10,14 @@ Parameters: Search Queue, Model used
 Returns: A Response from your Model of choice
 *********************************************************
 """
-def ask_ai(quere, model,debug=False):
-    model = GPT4All(model)
+def ask_ai(quere, model,debug=False,device='cpu'):
+    model = GPT4All(model,device=device)
     with model.chat_session():
         if debug == True:
             tokens = []
             response = model.generate(prompt=quere)
             for token in response:
                 tokens.append(token)
-                print(tokens)
                 return response
             else:
                 response = model.generate(prompt=quere)
@@ -75,6 +74,24 @@ def exit_prompt():
         pass
 
 
+def hw_change(device):
+    print('These are the currently supported hardware options \n'
+          'cuda (Nvidea based GPUs) \n'
+          'vulcan (AMD based GPUs) \n'
+          'cpu (cpu compute) \n'
+          f'current device is {device} \n')
+    dv_change = input('Which device would you like to switch to ? ')
+    if dv_change.upper() == 'CUDA' or dv_change.upper() == 'NVIDEA':
+        return 'gpu'
+    elif dv_change.upper() == 'VULCAN' or dv_change.upper() == 'AMD':
+        return 'amd'
+    elif dv_change.upper() == 'CPU':
+        return 'cpu'
+    else:
+        print("Unknown input no change made")
+        return device
+
+
 """
 *************************************************************
 Asks the user for input and returns that input however
@@ -95,9 +112,9 @@ def change_model():
             return model
 
 
-
 if __name__ == "__main__":
     model = 'orca-2-7b.Q4_0.gguf'
+    device = 'cpu'
     while True:
         prompt = input("Hello What You Want ")
         if prompt == 'ls':
@@ -105,9 +122,11 @@ if __name__ == "__main__":
         elif prompt == 'ch':
             model = change_model()
             print(model)
+        elif prompt == 'hw':
+            device = hw_change(device)
         elif prompt == 'exit':
             exit_prompt()
         else:
-            print(ask_ai(prompt, model,debug=True))
+            print(ask_ai(prompt, model,debug=True,device=device))
 
 
