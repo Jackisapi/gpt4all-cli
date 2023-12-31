@@ -1,5 +1,5 @@
 from modular_function_main_function import *
-
+from text_function import txt_reader
 # To See all the functions for this program please look at modular_function_main_function.py
 
 if __name__ == "__main__":
@@ -16,5 +16,7 @@ if __name__ == "__main__":
             device = hw_change(device)
         elif prompt == 'exit':
             exit_prompt()
+        elif prompt == 'help':
+            txt_reader('README.md')
         else:
             print(ask_ai(prompt, model, debug=True, device=device))
