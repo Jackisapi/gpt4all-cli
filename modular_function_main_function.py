@@ -1,6 +1,7 @@
 from gpt4all import GPT4All
 import json
 
+
 """
 **********************************************************
 Takes two strings one being a requests the other being the
@@ -10,6 +11,8 @@ Parameters: Search Queue, Model used
 Returns: A Response from your Model of choice
 *********************************************************
 """
+
+
 def ask_ai(quere, model,debug=False,device='cpu'):
     model = GPT4All(model,device=device)
     with model.chat_session():
@@ -23,6 +26,7 @@ def ask_ai(quere, model,debug=False,device='cpu'):
                 response = model.generate(prompt=quere)
                 return response
 
+
 """
 *************************************************************
 Opens "models2.json from the GPT4All Project and prints all
@@ -33,6 +37,8 @@ Data file being defined")
 Returns: All the Models officialy supported by GPT4ALL
 *************************************************************
 """
+
+
 def all_models(datafile='models2.json'):
     with open (datafile,'r') as model_data:
         model_dict = json.load(model_data)
@@ -58,12 +64,18 @@ Returns: Currently just the name of the model if found
 
 def model_check(name,datafile='models2.json'):
     with open(datafile,'r') as model_data:
+        model_changed = False
         model_dict = json.load(model_data)
         for dict_model in model_dict:
             if dict_model['name'].upper() in name.upper():
-                return dict_model['filename']
+                model_changed = True
+                return (dict_model['filename'],model_changed)
             else:
                 continue
+        if model_changed == False:
+            return ('blah',model_changed)
+
+
 
 
 def exit_prompt():
@@ -72,6 +84,7 @@ def exit_prompt():
         exit("Have A Nice Day (Program By Jackisapi")
     else:
         pass
+
 
 """
 *************************************************************
@@ -83,6 +96,8 @@ Parameters: Your current hardware choice
 Returns: Your New Hardware choise (if applicable)
 *************************************************************
 """
+
+
 def hw_change(device):
     print('These are the currently supported hardware options \n'
           'cuda (Nvidea based GPUs) \n'
@@ -91,7 +106,7 @@ def hw_change(device):
           f'current device is {device} \n')
     dv_change = input('Which device would you like to switch to ? ')
     if dv_change.upper() == 'CUDA' or dv_change.upper() == 'NVIDEA':
-        return 'gpu'
+        return 'nvidea'
     elif dv_change.upper() == 'VULCAN' or dv_change.upper() == 'AMD':
         return 'amd'
     elif dv_change.upper() == 'CPU':
@@ -110,7 +125,9 @@ Params: None
 Returns: User Input
 *************************************************************
 """
-def change_model():
+
+
+def change_model(current_model):
     change_made = False
     while not change_made:
         model = input('Please enter the name of the model or type ls to list all the available models ')
@@ -118,5 +135,7 @@ def change_model():
             all_models()
         else:
             model = model_check(model)
-            return model
-
+            if model[1] == False:
+                return current_model
+            else:
+                return model[0]
