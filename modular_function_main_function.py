@@ -1,7 +1,6 @@
 from gpt4all import GPT4All
 import json
 
-
 """
 **********************************************************
 Takes two strings one being a requests the other being the
@@ -13,10 +12,10 @@ Returns: A Response from your Model of choice
 """
 
 
-def ask_ai(quere, model,debug=False,device='cpu'):
-    model = GPT4All(model,device=device)
+def ask_ai(quere, model, debug=False, device='cpu'):
+    model = GPT4All(model, device=device)
     with model.chat_session():
-        if debug == True:
+        if debug:
             tokens = []
             response = model.generate(prompt=quere)
             for token in response:
@@ -40,15 +39,15 @@ Returns: All the Models officialy supported by GPT4ALL
 
 
 def all_models(datafile='models2.json'):
-    with open (datafile,'r') as model_data:
+    with open(datafile, 'r') as model_data:
         model_dict = json.load(model_data)
-        for dict_model in model_dict:
-            print('Name:',dict_model['name'],'\n'
-                  'filename:',dict_model['filename'],'\n'
-                   'type:',dict_model['type'],'\n'
-                   'description:',dict_model['description'],'\n'
-                    'URL:',dict_model['description'],'\n')
-        model_data.close()
+    for dict_model in model_dict:
+        print('Name:', dict_model['name'], '\n'
+                                           'filename:', dict_model['filename'], '\n'
+                                                                                'type:', dict_model['type'], '\n'
+                                                                                                             'description:',
+              dict_model['description'], '\n'
+                                         'URL:', dict_model['description'], '\n')
 
 
 """
@@ -62,20 +61,16 @@ Returns: Currently just the name of the model if found
 """
 
 
-def model_check(name,datafile='models2.json'):
-    with open(datafile,'r') as model_data:
-        model_changed = False
+def model_check(name, datafile='models2.json'):
+    with open(datafile, 'r') as model_data:
         model_dict = json.load(model_data)
-        for dict_model in model_dict:
-            if dict_model['name'].upper() in name.upper():
-                model_changed = True
-                return (dict_model['filename'],model_changed)
-            else:
-                continue
-        if model_changed == False:
-            return ('blah',model_changed)
 
+    for dict_model in model_dict:
+        if not dict_model['name'].upper() in name.upper():
+            continue
 
+        return dict_model['filename'], True
+    return 'blah', False
 
 
 def exit_prompt():
@@ -135,7 +130,7 @@ def change_model(current_model):
             all_models()
         else:
             model = model_check(model)
-            if model[1] == False:
+            if not model[1]:
                 return current_model
             else:
                 return model[0]
