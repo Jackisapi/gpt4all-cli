@@ -1,7 +1,4 @@
-from gpt4all import GPT4All
 import json
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
-from safetensors import safe_open
 
 """
 **********************************************************
@@ -14,18 +11,16 @@ Returns: A Response from your Model of choice
 """
 
 
-def ask_ai(quere, model, debug=False, device='cpu'):
-    model = GPT4All(model, device=device)
-    with model.chat_session():
-        if debug:
-            tokens = []
-            response = model.generate(prompt=quere)
-            for token in response:
-                tokens.append(token)
-                return response
-            else:
-                response = model.generate(prompt=quere)
-                return response
+# def ask_ai(quere, model, debug=False):
+#     if debug:
+#         tokens = []
+#         response = model(prompt=quere)
+#         for token in response:
+#             tokens.append(token)
+#             return response
+#         else:
+#             response = model(prompt=quere)
+#             return response
 
 
 """
@@ -136,32 +131,3 @@ def change_model(current_model):
                 return current_model
             else:
                 return model[0]
-
-
-"""
-*************************************************************
-INDEV But At the moment takes a model_tag (hugging face)
-and A output directory (you will want this to be near where
-GPT4all Stores its models) Fetches the safetensor off of huggingface
-and then downloads it to the output.
-Parameters: model_tag (get off hugging face) output_dir(gpt4all)
-Returns: Downloads the model to the specified directory as a
-safetensor
-*************************************************************
-"""
-
-
-def download_model(model_tag, output_dir):
-    try:
-        model = AutoModelForSequenceClassification.from_pretrained(model_tag)
-        tokenizer = AutoTokenizer.from_pretrained(model_tag)
-        model.save_pretrained(output_dir)
-        tokenizer.save_pretrained(output_dir)
-        tensors = {}
-        with safe_open('model-00001-of-00002.safetensors', framework='pt', device=0) as f:
-            for k in f.keys():
-                tensors[k] = f.get_tensor(k)
-        # return f'Model Successfully Downloaded at {output_dir}'
-        return tensors
-    except Exception as hf_error:
-        return f'Sorry ; ( Model Download Failed Due To Error: {hf_error}'
